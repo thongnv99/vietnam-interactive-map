@@ -79,11 +79,53 @@ h1 {
 
 .province-selector select {
   width: 100%;
-  padding: 10px;
+  color: #333;
+  padding: 10px 12px;
   border: 1px solid #ddd;
   border-radius: 4px;
   font-size: 14px;
   background-color: white;
+  cursor: pointer;
+  transition:
+    border-color 0.3s ease,
+    box-shadow 0.3s ease;
+  appearance: none;
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6,9 12,15 18,9'%3e%3c/polyline%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  background-size: 16px;
+  padding-right: 40px;
+}
+
+.province-selector select:hover {
+  border-color: #007bff;
+}
+
+.province-selector select:focus {
+  outline: none;
+  border-color: #007bff;
+  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+}
+
+.province-selector select option {
+  padding: 10px;
+  background-color: white;
+  color: #333;
+  font-size: 14px;
+}
+
+.province-selector select option:hover {
+  background-color: #f8f9fa;
+}
+
+.province-selector select option:checked {
+  background-color: #007bff;
+  color: white;
+}
+
+.province-selector select option:disabled {
+  color: #999;
+  background-color: #f5f5f5;
 }
 
 #info-panel {
@@ -116,6 +158,9 @@ h1 {
   color: #333;
   font-size: 16px;
   font-weight: bold;
+}
+h1 {
+  color: #333;
 }
 
 .landmarks-list {
@@ -272,7 +317,7 @@ h1 {
 .ol-popup {
   position: absolute;
   background-color: white;
-  box-shadow: 0 1px 4px rgba(0,0,0,0.2);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
   padding: 15px;
   border-radius: 10px;
   border: 1px solid #cccccc;
@@ -282,7 +327,8 @@ h1 {
   max-width: 320px;
 }
 
-.ol-popup:after, .ol-popup:before {
+.ol-popup:after,
+.ol-popup:before {
   top: 100%;
   border: solid transparent;
   content: " ";
@@ -390,4 +436,7 @@ button:focus-visible {
   button {
     background-color: #f9f9f9;
   }
+}
+.ol-attribution {
+  display: none !important;
 }
