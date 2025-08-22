@@ -13,6 +13,10 @@ import Feature from 'ol/Feature'
 import Point from 'ol/geom/Point'
 import Overlay from 'ol/Overlay'
 
+// Import assets
+import vnJsonUrl from '/vn.json?url'
+import pinSvgUrl from '/pin.svg?url'
+
 // Tạo HTML layout
 document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
   <div class="container">
@@ -84,7 +88,7 @@ interface Landmark {
 
 // Tạo vector layer để load GeoJSON
 const provinceVectorSource = new VectorSource({
-  url: '/vn.json',
+  url: vnJsonUrl,
   format: new GeoJSON()
 })
 
@@ -123,7 +127,7 @@ const landmarksVectorLayer = new VectorLayer({
       anchor: [0.5, 1],
       anchorXUnits: 'fraction',
       anchorYUnits: 'fraction',
-      src: '/pin.svg',
+      src: pinSvgUrl,
       scale: 0.8
     })
   })
@@ -200,7 +204,7 @@ function addLandmarkToMap(landmark: Landmark) {
     geometry: new Point(fromLonLat([landmark.longitude, landmark.latitude])),
     landmark: landmark
   })
-  
+
   landmarksVectorSource.addFeature(feature)
 }
 
@@ -213,12 +217,12 @@ function loadLandmarksToMap() {
 // Hàm để cập nhật danh sách landmarks trong sidebar
 function updateLandmarksList() {
   const landmarksList = document.getElementById('landmarks-list')!
-  
+
   if (landmarks.length === 0) {
     landmarksList.innerHTML = '<p style="text-align: center; color: #999; padding: 20px;">Chưa có địa danh nào</p>'
     return
   }
-  
+
   landmarksList.innerHTML = landmarks.map(landmark => `
     <div class="landmark-item">
       <span class="landmark-title" onclick="focusLandmark('${landmark.id}')">${landmark.title}</span>
@@ -290,16 +294,16 @@ map.on('dblclick', (event) => {
   if (target && target.closest('.modal')) {
     return // Không xử lý nếu click vào modal
   }
-  
+
   event.preventDefault()
   const coordinate = event.coordinate
   const lonLat = toLonLat(coordinate)
   currentClickCoordinate = [lonLat[0], lonLat[1]]
-  
+
   // Mở modal
   const modal = document.getElementById('landmark-modal')!
   modal.style.display = 'block'
-  
+
   // Focus vào input đầu tiên
   setTimeout(() => {
     const titleInput = document.getElementById('landmark-title') as HTMLInputElement
@@ -316,11 +320,11 @@ map.on('pointermove', (event) => {
       return feature
     }
   })
-  
+
   if (feature && feature !== currentPopupFeature) {
     const landmark = feature.get('landmark') as Landmark
     const coordinate = (feature.getGeometry() as Point).getCoordinates()
-    
+
     const popupContent = document.getElementById('popup-content')!
     popupContent.innerHTML = `
       <div class="popup-content">
@@ -331,7 +335,7 @@ map.on('pointermove', (event) => {
         </div>
       </div>
     `
-    
+
     popup.setPosition(coordinate)
     currentPopupFeature = feature
   } else if (!feature && currentPopupFeature) {
@@ -430,9 +434,9 @@ document.addEventListener('keydown', (event) => {
 // Xử lý submit form
 landmarkForm.addEventListener('submit', (event) => {
   event.preventDefault()
-  
+
   if (!currentClickCoordinate) return
-  
+
   const formData = new FormData(landmarkForm)
   const landmark: Landmark = {
     id: generateId(),
@@ -443,12 +447,12 @@ landmarkForm.addEventListener('submit', (event) => {
     longitude: currentClickCoordinate[0],
     createdAt: new Date()
   }
-  
+
   landmarks.push(landmark)
   saveLandmarksToStorage(landmarks)
   addLandmarkToMap(landmark)
   updateLandmarksList()
-  
+
   modal.style.display = 'none'
   landmarkForm.reset()
   currentClickCoordinate = null
@@ -460,7 +464,7 @@ declare global {
   function deleteLandmark(id: string): void
 }
 
-window.focusLandmark = function(id: string) {
+window.focusLandmark = function (id: string) {
   const landmark = landmarks.find(l => l.id === id)
   if (landmark) {
     const coordinate = fromLonLat([landmark.longitude, landmark.latitude])
@@ -472,7 +476,7 @@ window.focusLandmark = function(id: string) {
   }
 }
 
-window.deleteLandmark = function(id: string) {
+window.deleteLandmark = function (id: string) {
   if (confirm('Bạn có chắc chắn muốn xóa địa danh này?')) {
     landmarks = landmarks.filter(l => l.id !== id)
     saveLandmarksToStorage(landmarks)
